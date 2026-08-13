@@ -1,31 +1,45 @@
-# DeepCDR in TensorFlow
+# Training Cancer Drug-Response Models in TensorFlow
 
-> A TensorFlow port of DeepCDR for cancer drug-response prediction.
+> The base predictor — no ensembling, no intervals. This is the model the later work combines.
 
 ---
 
-Built for the Argonne National Laboratory precision-medicine collaboration so that DeepCDR could
-serve as one arm of the MEnKF stacker alongside models written in the same framework. Framework parity
-matters here: the stacker needs to extract intermediate representations from every arm through one interface.
+**What it predicts.** Given a cancer cell line and a drug, how sensitive is that cell line to that drug —
+reported as **IC50**, the drug concentration needed to halve cell growth. Lower means more sensitive.
 
-## Notebooks
+**How.** A **graph convolutional network** reads the drug's chemical structure as a graph of atoms and bonds, while
+the cell line's molecular profile enters as separate inputs. This follows the published DeepCDR architecture.
 
-**8 notebooks**, committed with their outputs intact so every figure and result table renders on GitHub without re-running anything.
+This repository contains **only the base model**. It performs no ensembling and produces no prediction intervals —
+that work lives in the companion repositories.
 
-- `Get_Joint_Learner_GDSC_1_Preds.ipynb`
-- `Get_Joint_Learner_GDSC_2_Preds.ipynb`
-- `Transfer_Learning_on_GDSC_2.ipynb`
-- `get_sample_data.ipynb`
-- `train_deepcdr_gcn.ipynb`
-- `train_deepcdr_gcn_dropout_in_train.ipynb`
-- `train_deepcdr_gcn_dropout_in_train_ccle_0.ipynb`
-- `train_deepcdr_gcn_dropout_in_train_ctrpv2_0.ipynb`
+## What the code does
 
-## About this repository
+Training runs across four public drug-screening datasets: **GDSC-1 and GDSC-2** (Genomics of Drug Sensitivity
+in Cancer), **CCLE** (Cancer Cell Line Encyclopedia) and **CTRPv2** (Cancer Therapeutics Response Portal).
 
-Research code from my doctoral work at the University of Nebraska–Lincoln. Trained model checkpoints and bulk datasets are excluded from version control; the notebooks regenerate them. Previously hosted at `github.com/Ved-Piyush/DeepCDR_TF`.
+Two training regimes are compared: learning from scratch (`From_Scratch_Learning_on_GDSC_2.py`) and **transfer
+learning**, where a model trained on one dataset is adapted to another (`Transfer_Learning_on_GDSC_2`). Several
+notebooks keep dropout active during training in a way that supports later uncertainty estimation
+(`train_deepcdr_gcn_dropout_in_train*`).
+
+Performance is reported as Spearman correlation, R² and mean squared error. Data loading goes through
+`improve_utils.py`, from Argonne National Laboratory's IMPROVE framework for benchmarking drug-response models.
+
+## Running it
+
+1. `get_sample_data.ipynb` pulls a small sample to check the data path works.
+2. `train_deepcdr_gcn*.ipynb` trains the graph convolutional model.
+3. `Transfer_Learning_on_GDSC_2` adapts a trained model to a second dataset.
+4. `Get_Joint_Learner_GDSC_*_Preds.ipynb` writes out predictions for downstream use.
+
+## Notes
+
+Notebook outputs are committed, so the figures and result tables render on GitHub without running anything. Screening datasets are downloaded through `improve_utils`; trained weights and scheduler logs are not committed.
+
+Research code from my doctoral work at the University of Nebraska–Lincoln (8 notebooks). Previously hosted at `github.com/Ved-Piyush/DeepCDR_TF`.
 
 ---
 
 **Ved Piyush, PhD** · Statistics, University of Nebraska–Lincoln  
-[vedpiyush93@gmail.com](mailto:vedpiyush93@gmail.com) · [Google Scholar](https://scholar.google.com/citations?hl=en&user=657rVYAAAAAJ) · [LinkedIn](https://www.linkedin.com/in/ved-piyush)
+[vedpiyush93@gmail.com](mailto:vedpiyush93@gmail.com) · [Google Scholar](https://scholar.google.com/citations?hl=en&user=657rVYAAAAAJ) · [Website](https://vedpiyush93-stack.github.io)
