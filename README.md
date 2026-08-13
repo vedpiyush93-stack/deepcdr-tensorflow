@@ -33,6 +33,12 @@ Performance is reported as Spearman correlation, R² and mean squared error. Dat
 3. `Transfer_Learning_on_GDSC_2` adapts a trained model to a second dataset.
 4. `Get_Joint_Learner_GDSC_*_Preds.ipynb` writes out predictions for downstream use.
 
+
+## Where to look first
+
+- **`train_deepcdr_gcn.ipynb`** — the base model, trained from scratch
+- **`Transfer_Learning_on_GDSC_2.ipynb`** — adapting a trained model to a second dataset
+
 ## Notes
 
 Notebook outputs are committed, so the figures and result tables render on GitHub without running anything. Screening datasets are downloaded through `improve_utils`; trained weights and scheduler logs are not committed.
